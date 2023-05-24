@@ -1,0 +1,130 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Crypto Campus Scoreboard</title>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" href="Scores.css">
+
+  <!-- Google Sheets Scripts -->
+  <script>
+    const spreadsheetId = "1BavLKLWllDhu_ivGbblIQQ9CyNoa3EGVgEcZq2Qk-JU";
+    const range = "Tracker!A1:F";
+    
+    const apiKey = "AIzaSyCe4l2aEYBeWeVbEMGj64a1ltwrdXlLRvw";
+    const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
+
+    fetch(apiUrl)
+    .then(response => response.json())
+    .then(data => {
+        console.log("Data:", data);
+        const teamContainer = document.querySelector(".team-container");
+        for (let i = 1; i < data.values.length; i++) {
+        const teamName = data.values[i][0];
+        const subtitle = data.values[i][1];
+
+        const progressWidth = data.values[i][1];
+        const progressWidth2 = data.values[i][2];
+        const progressWidth3 = data.values[i][3];
+        const progressWidth4 = data.values[i][4];
+        const progressWidth5 = data.values[i][5];
+        
+        const progressTopColor =
+            i === 1
+            ? "#fabc05"
+            : i === 2
+            ? "#cccccc"
+            : i === 3
+            ? "#ce7800"
+            : "#6d9eeb";
+        const progressBottomColor =
+            i === 1
+            ? "#be8e00"
+            : i === 2
+            ? "#707070"
+            : i === 3
+            ? "#925500"
+            : "#2c65be";
+
+
+        const newTeam = document.createElement("div");
+        newTeam.classList.add("team");
+
+        const title = document.createElement("h3");
+        title.classList.add("progress-title");
+        title.style.fontSize = "xx-large";
+        title.style.color = "black";
+        title.textContent = teamName;
+        newTeam.appendChild(title);
+
+        const progressBar = document.createElement("div");
+        progressBar.classList.add("progress");
+        const progressBarInner = document.createElement("div");
+        progressBarInner.classList.add("progress-bar");
+        progressBarInner.style.width = `${progressWidth}%`;
+        progressBarInner.style.background = `linear-gradient(to bottom, ${progressTopColor}, ${progressBottomColor})`;
+        progressBar.appendChild(progressBarInner);
+        newTeam.appendChild(progressBar);
+        
+        const progressBar2 = document.createElement("div");
+        progressBar2.classList.add("progress");
+        const progressBar2Inner = document.createElement("div");
+        progressBar2Inner.classList.add("progress-bar");
+        progressBar2Inner.style.width = `${progressWidth2}%`;
+        progressBar2Inner.style.background = `linear-gradient(to bottom, ${progressTopColor}, ${progressBottomColor})`;
+        progressBar2.appendChild(progressBar2Inner);
+        newTeam.appendChild(progressBar2);
+
+        const progressBar3 = document.createElement("div");
+        progressBar3.classList.add("progress");
+        const progressBar3Inner = document.createElement("div");
+        progressBar3Inner.classList.add("progress-bar");
+        progressBar3Inner.style.width = `${progressWidth3}%`;
+        progressBar3Inner.style.background = `linear-gradient(to bottom, ${progressTopColor}, ${progressBottomColor})`;
+        progressBar3.appendChild(progressBar3Inner);
+        newTeam.appendChild(progressBar3);
+
+        const progressBar4 = document.createElement("div");
+        progressBar4.classList.add("progress");
+        const progressBar4Inner = document.createElement("div");
+        progressBar4Inner.classList.add("progress-bar");
+        progressBar4Inner.style.width = `${progressWidth4}%`;
+        progressBar4Inner.style.background = `linear-gradient(to bottom, ${progressTopColor}, ${progressBottomColor})`;
+        progressBar4.appendChild(progressBar4Inner);
+        newTeam.appendChild(progressBar4);
+
+        const progressBar5 = document.createElement("div");
+        progressBar5.classList.add("progress");
+        const progressBar5Inner = document.createElement("div");
+        progressBar5Inner.classList.add("progress-bar");
+        progressBar5Inner.style.width = `${progressWidth5}%`;
+        progressBar5Inner.style.background = `linear-gradient(to bottom, ${progressTopColor}, ${progressBottomColor})`;
+        progressBar5.appendChild(progressBar5Inner);
+        newTeam.appendChild(progressBar5);
+
+        teamContainer.appendChild(newTeam);
+        }
+    })
+    .catch(error => console.error("Error:", error));
+  </script>
+
+</head>
+
+
+<body>
+    
+<div class="container">
+    <div class="status-bar-containers">
+        <div class="row">
+            <div class="col-md-auto col-md-auto">
+
+                <div class="team-container">
+                </div>
+                
+            </div>
+        </div>
+    </div>  
+</div>
+
+
+</body>
+</html>
