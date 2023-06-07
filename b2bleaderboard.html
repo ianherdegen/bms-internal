@@ -8,105 +8,81 @@
   <!-- Google Sheets Scripts -->
   <script>
     const spreadsheetId = "1BavLKLWllDhu_ivGbblIQQ9CyNoa3EGVgEcZq2Qk-JU";
-    const range = "Tracker!A1:F";
-    
+    const range = "Tracker!A1:F7"; // Change 7 in F7 to the last row that you want to consider
     const apiKey = "AIzaSyCe4l2aEYBeWeVbEMGj64a1ltwrdXlLRvw";
     const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
 
     fetch(apiUrl)
     .then(response => response.json())
     .then(data => {
-        console.log("Data:", data);
         const teamContainer = document.querySelector(".team-container");
-        for (let i = 1; i < data.values.length; i++) {
-        const teamName = data.values[i][0];
-        const subtitle = data.values[i][1];
+        const metrics = data.values[1]; // Second row is the metrics
+        const colors = ["#fabc05", "#cccccc", "#ce7800", "#6d9eeb"];
 
-        const progressWidth = data.values[i][1];
-        const progressWidth2 = data.values[i][2];
-        const progressWidth3 = data.values[i][3];
-        const progressWidth4 = data.values[i][4];
-        const progressWidth5 = data.values[i][5];
-        
-        const progressTopColor =
-            i === 1
-            ? "#fabc05"
-            : i === 2
-            ? "#cccccc"
-            : i === 3
-            ? "#ce7800"
-            : "#6d9eeb";
-        const progressBottomColor =
-            i === 1
-            ? "#be8e00"
-            : i === 2
-            ? "#707070"
-            : i === 3
-            ? "#925500"
-            : "#2c65be";
+        // Create a legend
+        const legendContainer = document.createElement("div");
+        legendContainer.classList.add("legend-container");
+        teamContainer.appendChild(legendContainer);
 
+        for (let i = 2; i < data.values.length; i++) { // Start from 3rd row
+            const personName = data.values[i][0];
 
-        const newTeam = document.createElement("div");
-        newTeam.classList.add("team");
+            // Add an image next to each person's name in the legend
+            const legendItem = document.createElement("div");
+            const legendImage = document.createElement("img");
+            legendImage.src = `car${i-1}.png`;
+            legendItem.appendChild(legendImage);
+            const legendText = document.createElement("span");
+            legendText.textContent = personName;
+            legendItem.appendChild(legendText);
+            legendContainer.appendChild(legendItem);
+        }
 
-        const title = document.createElement("h3");
-        title.classList.add("progress-title");
-        title.style.fontSize = "xx-large";
-        title.style.color = "black";
-        title.textContent = teamName;
-        newTeam.appendChild(title);
+        // Create a section for each metric
+        for (let j = 1; j < metrics.length; j++) { // Start from 2nd column
+            const metricName = metrics[j];
 
-        const progressBar = document.createElement("div");
-        progressBar.classList.add("progress");
-        const progressBarInner = document.createElement("div");
-        progressBarInner.classList.add("progress-bar");
-        progressBarInner.style.width = `${progressWidth}%`;
-        progressBarInner.style.background = `linear-gradient(to bottom, ${progressTopColor}, ${progressBottomColor})`;
-        progressBar.appendChild(progressBarInner);
-        newTeam.appendChild(progressBar);
-        
-        const progressBar2 = document.createElement("div");
-        progressBar2.classList.add("progress");
-        const progressBar2Inner = document.createElement("div");
-        progressBar2Inner.classList.add("progress-bar");
-        progressBar2Inner.style.width = `${progressWidth2}%`;
-        progressBar2Inner.style.background = `linear-gradient(to bottom, ${progressTopColor}, ${progressBottomColor})`;
-        progressBar2.appendChild(progressBar2Inner);
-        newTeam.appendChild(progressBar2);
+            // Create a title for the metric
+            const metricTitle = document.createElement("h2");
+            metricTitle.textContent = metricName;
+            teamContainer.appendChild(metricTitle);
 
-        const progressBar3 = document.createElement("div");
-        progressBar3.classList.add("progress");
-        const progressBar3Inner = document.createElement("div");
-        progressBar3Inner.classList.add("progress-bar");
-        progressBar3Inner.style.width = `${progressWidth3}%`;
-        progressBar3Inner.style.background = `linear-gradient(to bottom, ${progressTopColor}, ${progressBottomColor})`;
-        progressBar3.appendChild(progressBar3Inner);
-        newTeam.appendChild(progressBar3);
+            // Create a progress bar for each person for this metric
+            for (let i = 2; i < data.values.length; i++) { // Start from 3rd row
+                const metricValue = data.values[i][j];
+                const colorIndex = (i - 2) % 4;
+                const progressTopColor = colors[colorIndex];
+                const progressBottomColor = colors[(colorIndex + 2) % 4];
 
-        const progressBar4 = document.createElement("div");
-        progressBar4.classList.add("progress");
-        const progressBar4Inner = document.createElement("div");
-        progressBar4Inner.classList.add("progress-bar");
-        progressBar4Inner.style.width = `${progressWidth4}%`;
-        progressBar4Inner.style.background = `linear-gradient(to bottom, ${progressTopColor}, ${progressBottomColor})`;
-        progressBar4.appendChild(progressBar4Inner);
-        newTeam.appendChild(progressBar4);
+                const progressBar = document.createElement("div");
+                progressBar.classList.add("progress");
+                const progressBarInner = document.createElement("div");
+                progressBarInner.classList.add("progress-bar");
+                progressBarInner.style.width = `${metricValue}%`;
+                progressBarInner.style.background = `linear-gradient(to bottom, ${progressTopColor}, ${progressBottomColor})`;
+                progressBar.appendChild(progressBarInner);
+                teamContainer.appendChild(progressBar);
 
-        const progressBar5 = document.createElement("div");
-        progressBar5.classList.add("progress");
-        const progressBar5Inner = document.createElement("div");
-        progressBar5Inner.classList.add("progress-bar");
-        progressBar5Inner.style.width = `${progressWidth5}%`;
-        progressBar5Inner.style.background = `linear-gradient(to bottom, ${progressTopColor}, ${progressBottomColor})`;
-        progressBar5.appendChild(progressBar5Inner);
-        newTeam.appendChild(progressBar5);
+                // Add a container for the car image
+                const carContainer = document.createElement("div");
+                carContainer.style.position = "relative";
+                carContainer.style.height = "20px";
+                carContainer.style.width = "100%";
+                progressBarInner.appendChild(carContainer);
 
-        teamContainer.appendChild(newTeam);
+                // Add an image of a car at the end of the progress bar
+                const carImage = document.createElement("img");
+                carImage.src = `car${i-1}.png`;
+                carImage.style.position = "absolute";
+                carImage.style.width = "20px";
+                carImage.style.height = "20px";
+                carImage.style.right = "-10px"; // Half the width of the image
+                carContainer.appendChild(carImage);
+            }
         }
     })
     .catch(error => console.error("Error:", error));
-  </script>
-
+</script>
 </head>
 
 
