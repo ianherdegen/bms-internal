@@ -17,7 +17,6 @@
     .then(data => {
         const teamContainer = document.querySelector(".team-container");
         const metrics = data.values[1]; // Second row is the metrics
-        const colors = ["#fabc05", "#cccccc", "#ce7800", "#6d9eeb"];
 
         // Create a legend
         const legendContainer = document.createElement("div");
@@ -47,37 +46,30 @@
             metricTitle.textContent = metricName;
             teamContainer.appendChild(metricTitle);
 
-            // Create a progress bar for each person for this metric
+            // Create a racetrack bar for each person for this metric
             for (let i = 2; i < data.values.length; i++) { // Start from 3rd row
                 const metricValue = data.values[i][j];
-                const colorIndex = (i - 2) % 4;
-                const progressTopColor = colors[colorIndex];
-                const progressBottomColor = colors[(colorIndex + 2) % 4];
 
                 const progressBar = document.createElement("div");
                 progressBar.classList.add("progress");
-                const progressBarInner = document.createElement("div");
-                progressBarInner.classList.add("progress-bar");
-                progressBarInner.style.width = `${metricValue}%`;
-                progressBarInner.style.background = `linear-gradient(to bottom, ${progressTopColor}, ${progressBottomColor})`;
-                progressBar.appendChild(progressBarInner);
-                teamContainer.appendChild(progressBar);
+                progressBar.style.height = "20px";
+                progressBar.style.backgroundImage = `url('racetrack.png')`;
+                progressBar.style.backgroundSize = "100% 100%";
+                progressBar.style.position = "relative";
+                progressBar.style.overflow = "hidden";
 
-                // Add a container for the car image
-                const carContainer = document.createElement("div");
-                carContainer.style.position = "relative";
-                carContainer.style.height = "20px";
-                carContainer.style.width = "100%";
-                progressBarInner.appendChild(carContainer);
-
-                // Add an image of a car at the end of the progress bar
+                // Add an image of a car at the position within the racetrack
                 const carImage = document.createElement("img");
                 carImage.src = `car${i-1}.png`;
                 carImage.style.position = "absolute";
                 carImage.style.width = "20px";
                 carImage.style.height = "20px";
-                carImage.style.right = "-10px"; // Half the width of the image
-                carContainer.appendChild(carImage);
+                carImage.style.top = "10px";
+                carImage.style.left = `${metricValue}%`;
+                carImage.style.transform = "translate(-50%, -50%)";
+                progressBar.appendChild(carImage);
+
+                teamContainer.appendChild(progressBar);
             }
         }
     })
